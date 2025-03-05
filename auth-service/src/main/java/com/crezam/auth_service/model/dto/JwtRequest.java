@@ -1,4 +1,4 @@
-package com.crezam.auth_service.dto;
+package com.crezam.auth_service.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtResponse {
+public class JwtRequest {
 
-    String token;
+    String email;
+    String password;
 }

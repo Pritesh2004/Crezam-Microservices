@@ -1,32 +1,33 @@
 package com.crezam.auth_service.service;
 
-import com.crezam.auth_service.entity.User;
-import com.crezam.auth_service.repository.UserRepository;
+import com.crezam.auth_service.client.UserServiceClient;
+import com.crezam.auth_service.model.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UserServiceClient userServiceClient;
 
-
-    public AuthService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+    public AuthService(BCryptPasswordEncoder passwordEncoder, UserServiceClient userServiceClient) {
         this.passwordEncoder = passwordEncoder;
+        this.userServiceClient = userServiceClient;
     }
 
     public User createUser(User userRequest) {
-        userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword())); // Hash password
-        return userRepository.save(userRequest);
+        return userServiceClient.createUser(userRequest);
     }
 
-    public Optional<User> findByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email));
+    public User findByEmail(String email) {
+        return userServiceClient.getUserByEmail(email);
     }
 
+    public String updatePassword(String email, String newPassword) {
+        return userServiceClient.updatePassword(email, newPassword);
+    }
 }
